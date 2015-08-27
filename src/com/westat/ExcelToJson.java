@@ -25,7 +25,6 @@ public class ExcelToJson {
 
     private Workbook workbook = null;
     private ArrayList<ArrayList<String>> JsonData = null;
-    private int maxRowWidth = 0;
     private int formattingConvention = 0;
     private DataFormatter formatter = null;
     private FormulaEvaluator evaluator = null;
@@ -173,74 +172,10 @@ System.out.println(info);
         StringBuffer buffer = null;
         String JsonLineElement = null;
         boolean lineIsJson = false;
-        System.out.println("asJson is:");
-        System.out.println(asJson());
         try {
-
             //           System.out.println("Saving the Json file [" + file.getName() + "]");
-/*
-            need to add [ to start and ] to end of output
-            also need to change separator to \t for tab separated values
-            no quotes to separate data values or commas
-             */
-            // Open a writer onto the Json file.
             fw = new FileWriter(file);
             bw = new BufferedWriter(fw);
-            /*
-            // Step through the elements of the ArrayList that was used to hold
-            // all of the data recovered from the Excel workbooks' sheets, rows
-            // and cells.
-            for (int i = 0; i < JsonData.size(); i++) {
-            buffer = new StringBuffer();
-            
-            // Get an element from the ArrayList that contains the data for
-            // the workbook. This element will itself be an ArrayList
-            // containing Strings and each String will hold the data recovered
-            // from a single cell. The for() loop is used to recover elements
-            // from this 'row' ArrayList one at a time and to write the Strings
-            // away to a StringBuffer thus assembling a single line for inclusion
-            // in the Json file. If a row was empty or if it was short, then
-            // the ArrayList that contains it's data will also be shorter than
-            // some of the others. Therefore, it is necessary to check within
-            // the for loop to ensure that the ArrayList contains data to be
-            // processed. If it does, then an element will be recovered and
-            // appended to the StringBuffer.
-            line = JsonData.get(i);
-            JsonLineElement = line.get(0);
-            lineIsJson = (JsonLineElement != null) && (JsonLineElement.contains("{") || JsonLineElement.contains("}") 
-            || JsonLineElement.contains("[") || JsonLineElement.contains("]") ) ;
-            if (!lineIsJson) {
-            buffer.append("[");
-            }
-            for (int j = 0; j < line.size(); j++) {
-            if (line.size() > j) {
-            JsonLineElement = line.get(j);
-            if (JsonLineElement != null) {
-            if (lineIsJson)
-            buffer.append(JsonLineElement);
-            else
-            buffer.append( "\"" + JsonLineElement +"\"");
-            }
-            }
-            if ( !lineIsJson && (j < (line.size() - 1)) ) {
-            buffer.append(separator);
-            }
-            
-            }
-            if (!lineIsJson) {
-            buffer.append("]");
-            }
-            //System.out.println(buffer.toString());
-            // Once the line is built, write it away to the Json file.
-            bw.write(buffer.toString().trim());
-            
-            // Condition the inclusion of new line characters so as to
-            // avoid an additional, superfluous, new line at the end of
-            // the file.
-            if (i < (JsonData.size() - 1)) {
-            bw.newLine();
-            }
-            } */
             bw.write(asJson());
         } finally {
             if (bw != null) {
@@ -350,12 +285,6 @@ System.out.println(info);
                         JsonLine.add(formatter.formatCellValue(cell, evaluator));
                     }
                 }
-            }
-            // Make a note of the index number of the right most cell. This value
-            // will later be used to ensure that the matrix of data in the Json file
-            // is square.
-            if (lastCellNum > maxRowWidth) {
-                maxRowWidth = lastCellNum;
             }
         }
         JsonData.add(JsonLine);
